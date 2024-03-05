@@ -740,6 +740,10 @@ public class DBHelpers {
                             for (DataSourceNamespace dataSourceNamespace : dataSourceCluster.getDataSourceNamespaceHashMap().values()) {
                                 String namespaceName = dataSourceNamespace.getDataSourceNamespaceName();
 
+                                if (null == dataSourceNamespace.getDataSourceWorkloadHashMap()) {
+                                    continue;
+                                }
+
                                 for (DataSourceWorkload dataSourceWorkload : dataSourceNamespace.getDataSourceWorkloadHashMap().values()) {
                                     kruizeMetadata.setClusterGroupName(clusterGroupName);
                                     kruizeMetadata.setClusterName(dataSourceClusterName);

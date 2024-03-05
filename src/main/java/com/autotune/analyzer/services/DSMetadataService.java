@@ -83,40 +83,6 @@ public class DSMetadataService extends HttpServlet {
             } else {
                 sendSuccessResponse(response, dataSourceMetadataMap.get(dataSourceName));
             }
-            /*
-            List<ImportDSMetadataAPIObject> importDSMetadataAPIObjects = Arrays.asList(new Gson().fromJson(inputData, ImportDSMetadataAPIObject[].class));
-            if (importDSMetadataAPIObjects.size() > 1) {
-                LOGGER.error(AnalyzerErrorConstants.AutotuneObjectErrors.UNSUPPORTED_DATASOURCE);
-                sendErrorResponse(inputData, response, null, HttpServletResponse.SC_BAD_REQUEST, AnalyzerErrorConstants.AutotuneObjectErrors.UNSUPPORTED_DATASOURCE);
-            } else {
-                for (ImportDSMetadataAPIObject importDSMetadataAPIObject: importDSMetadataAPIObjects) {
-                    String dataSourceName = importDSMetadataAPIObject.getDataSourceName();
-
-                    if (null == dataSourceName || dataSourceName.isEmpty()) {
-                        sendErrorResponse(
-                                inputData,
-                                response,
-                                null,
-                                HttpServletResponse.SC_BAD_REQUEST,
-                                AnalyzerErrorConstants.APIErrors.ImportDataSourceMetadataAPI.DATASOURCE_NAME_MANDATORY);
-                    }
-                    // kruize_dsmetadata -> addDSMetadataToDB()
-                    addDataSourceMetadataToDataBase(dataSourceMetadataMap, dataSourceName);
-
-                    if (dataSourceMetadataMap.isEmpty() || !dataSourceMetadataMap.containsKey(dataSourceName)) {
-                        sendErrorResponse(
-                                inputData,
-                                response,
-                                new Exception(AnalyzerErrorConstants.APIErrors.ListDataSourcesAPI.INVALID_DATASOURCE_NAME_EXCPTN),
-                                HttpServletResponse.SC_BAD_REQUEST,
-                                String.format(AnalyzerErrorConstants.APIErrors.ListDataSourcesAPI.INVALID_DATASOURCE_NAME_MSG, dataSourceName)
-                        );
-                    } else {
-                        sendSuccessResponse(response, dataSourceMetadataMap.get(dataSourceName));
-                    }
-                }
-            }
-             */
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.error("Unknown exception caught: " + e.getMessage());

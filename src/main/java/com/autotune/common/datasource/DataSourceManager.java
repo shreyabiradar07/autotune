@@ -163,7 +163,7 @@ public class DataSourceManager {
     private boolean checkIfClusterGroupExists(String clusterGroupName) {
         boolean isPresent = false;
         try {
-            DataSourceDetailsInfo dataSourceDetailsInfo = new ExperimentDBService().loadDataSourceClusterGroupFromDBByName(clusterGroupName);
+            DataSourceDetailsInfo dataSourceDetailsInfo = new ExperimentDBService().loadMetadataFromDBByName(clusterGroupName);
             if (dataSourceDetailsInfo != null) {
                 LOGGER.warn("Cluster group: {} already exists!", clusterGroupName);
                 isPresent = true;
