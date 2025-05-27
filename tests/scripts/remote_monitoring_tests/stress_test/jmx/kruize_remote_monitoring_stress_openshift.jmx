@@ -895,14 +895,49 @@ vars.put(&quot;start_time&quot;, startTimeString);
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">[{&#xd;
-  &quot;experiment_name&quot;: &quot;quarkus-resteasy-kruize-min-http-response-time-db-${__threadNum}&quot;  &#xd;
-}]&#xd;
-</stringProp>
+                           <elementProp name="" elementType="HTTPArgument">
+                              <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                              <stringProp name="Argument.value">[{&#xd;
+                &quot;version&quot;: &quot;v2.0&quot;,&#xd;
+                &quot;experiment_name&quot;: &quot;quarkus-resteasy-kruize-min-http-response-time-db-${__threadNum}&quot;,&#xd;
+                &quot;cluster_name&quot;: &quot;cluster-one-division-bell&quot;,&#xd;
+                &quot;performance_profile&quot;: &quot;resource-optimization-openshift&quot;,&#xd;
+                &quot;mode&quot;: &quot;monitor&quot;,&#xd;
+                &quot;target_cluster&quot;: &quot;remote&quot;,&#xd;
+                &quot;kubernetes_objects&quot;: [&#xd;
+                  {&#xd;
+                    &quot;type&quot;: &quot;deployment&quot;,&#xd;
+                    &quot;name&quot;: &quot;tfb-qrh-deployment-${__threadNum}&quot;,&#xd;
+                    &quot;namespace&quot;: &quot;default-${__threadNum}&quot;,&#xd;
+                    &quot;containers&quot;: [&#xd;
+                      {&#xd;
+                        &quot;container_image_name&quot;: &quot;kruize/tfb-db:1.15&quot;,&#xd;
+                        &quot;container_name&quot;: &quot;tfb-server-0&quot;&#xd;
+                      },&#xd;
+                      {&#xd;
+                        &quot;container_image_name&quot;: &quot;kruize/tfb-qrh:1.13.2.F_et17&quot;,&#xd;
+                        &quot;container_name&quot;: &quot;tfb-server-1&quot;&#xd;
+                      }&#xd;
+                    ]&#xd;
+                  }&#xd;
+                ],&#xd;
+                &quot;trial_settings&quot;: {&#xd;
+                  &quot;measurement_duration&quot;: &quot;15min&quot;&#xd;
+                },&#xd;
+                &quot;recommendation_settings&quot;: {&#xd;
+                  &quot;threshold&quot;: &quot;0.1&quot;&#xd;
+                }&#xd;
+              }]&#xd;
+              </stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
+               <elementProp name="rm" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">true</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">rm</stringProp>
+               </elementProp>
             </collectionProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain"></stringProp>
