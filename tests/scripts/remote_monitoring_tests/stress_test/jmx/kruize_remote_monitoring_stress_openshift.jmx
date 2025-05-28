@@ -898,45 +898,10 @@ vars.put(&quot;start_time&quot;, startTimeString);
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">[{&#xd;
-                  &quot;version&quot;: &quot;v2.0&quot;,&#xd;
-                  &quot;experiment_name&quot;: &quot;quarkus-resteasy-kruize-min-http-response-time-db-${__threadNum}&quot;,&#xd;
-                  &quot;cluster_name&quot;: &quot;cluster-one-division-bell&quot;,
-                  &quot;performance_profile&quot;: &quot;resource-optimization-openshift&quot;,
-                  &quot;mode&quot;: &quot;monitor&quot;,
-                  &quot;target_cluster&quot;: &quot;remote&quot;,
-                  &quot;kubernetes_objects&quot;: [
-                    {
-                      &quot;type&quot;: &quot;deployment&quot;,
-                      &quot;name&quot;: &quot;tfb-qrh-deployment-${__threadNum}&quot;,
-                      &quot;namespace&quot;: &quot;default-${__threadNum}&quot;,
-                      &quot;containers&quot;: [
-                        {
-                          &quot;container_image_name&quot;: &quot;kruize/tfb-db:1.15&quot;,
-                          &quot;container_name&quot;: &quot;tfb-server-0&quot;
-                        },
-                        {
-                          &quot;container_image_name&quot;: &quot;kruize/tfb-qrh:1.13.2.F_et17&quot;,
-                          &quot;container_name&quot;: &quot;tfb-server-1&quot;
-                        }
-                      ]
-                    }
-                  ],
-                  &quot;trial_settings&quot;: {
-                    &quot;measurement_duration&quot;: &quot;15min&quot;
-                  },
-                  &quot;recommendation_settings&quot;: {
-                    &quot;threshold&quot;: &quot;0.1&quot;
-                  }
-                }]</stringProp>
+          &quot;experiment_name&quot;: &quot;quarkus-resteasy-kruize-min-http-response-time-db-${__threadNum}&quot;  &#xd;
+        }]&#xd;
+        </stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-
-              <elementProp name="rm" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">true</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">rm</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -953,6 +918,7 @@ vars.put(&quot;start_time&quot;, startTimeString);
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.queryStringParameters">rm=true</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
