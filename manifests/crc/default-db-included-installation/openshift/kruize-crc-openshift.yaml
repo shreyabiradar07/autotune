@@ -21,7 +21,6 @@ rules:
       - ""
     resources:
       - pods
-      - customresourcedefinitions
     verbs:
       - "*"
   - apiGroups:
