@@ -1,13 +1,16 @@
+---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: openshift-tuning
+
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: kruize-sa
   namespace: openshift-tuning
+
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
@@ -20,13 +23,13 @@ rules:
       - pods
       - customresourcedefinitions
     verbs:
-      - '*'
+      - "*"
   - apiGroups:
       - apiextensions.k8s.io
     resources:
       - customresourcedefinitions
     verbs:
-      - '*'
+      - "*"
   - apiGroups:
       - autoscaling.k8s.io
     resources:
@@ -34,19 +37,20 @@ rules:
       - verticalpodautoscalers/status
       - verticalpodautoscalercheckpoints
     verbs:
-      - '*'
+      - "*"
   - apiGroups:
       - rbac.authorization.k8s.io
     resources:
       - clusterrolebindings
     verbs:
-      - '*'
+      - "*"
   - apiGroups:
       - apps
     resources:
       - deployments
     verbs:
       - "*"
+
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
@@ -60,6 +64,7 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: kruize-recommendation-updater
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -73,30 +78,56 @@ roleRef:
   kind: ClusterRole
   name: cluster-monitoring-view
   apiGroup: rbac.authorization.k8s.io
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: kruize-edit-ko
 rules:
-  - apiGroups: [ "apps" ]
-    resources: [ "deployments", "statefulsets", "daemonsets" ]
-    verbs: [ "get", "list", "patch", "update" ]
-  - apiGroups: [ "batch" ]
-    resources: [ "jobs" ]
-    verbs: [ "get", "list", "create", "delete" ]
-  - apiGroups: [ "" ]
-    resources: [ "namespaces" ]
-    verbs: [ "get", "list" ]
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+    verbs:
+      - get
+      - list
+      - patch
+      - update
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+    verbs:
+      - get
+      - list
+      - create
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - get
+      - list
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: instaslices-access
 rules:
-  - apiGroups: [ "inference.redhat.com" ]
-    resources: [ "instaslices" ]
-    verbs: [ "get", "list", "watch" ]
+  - apiGroups:
+      - inference.redhat.com
+    resources:
+      - instaslices
+    verbs:
+      - get
+      - list
+      - watch
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -110,6 +141,7 @@ roleRef:
   kind: ClusterRole
   name: instaslices-access
   apiGroup: rbac.authorization.k8s.io
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -123,6 +155,7 @@ roleRef:
   kind: ClusterRole
   name: kruize-edit-ko
   apiGroup: rbac.authorization.k8s.io
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -136,6 +169,7 @@ subjects:
   - kind: ServiceAccount
     name: kruize-sa
     namespace: openshift-tuning
+
 ---
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
@@ -144,38 +178,41 @@ metadata:
 provisioner: kubernetes.io/no-provisioner
 reclaimPolicy: Retain
 volumeBindingMode: Immediate
+
 ---
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: kruize-db-pv-volume  # Sets PV's name
+  name: kruize-db-pv-volume
   namespace: openshift-tuning
   labels:
-    type: local  # Sets PV's type to local
+    type: local
     app: kruize-db
 spec:
   storageClassName: manual
   capacity:
-    storage: 500Mi # Sets PV Volume
+    storage: 500Mi
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: "/mnt/data"
+    path: /mnt/data
+
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: kruize-db-pv-claim  # Sets name of PVC
+  name: kruize-db-pv-claim
   namespace: openshift-tuning
   labels:
     app: kruize-db
 spec:
   storageClassName: manual
   accessModes:
-    - ReadWriteMany  # Sets read and write access
+    - ReadWriteMany
   resources:
     requests:
-      storage: 500Mi  # Sets volume size
+      storage: 500Mi
+
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -196,7 +233,7 @@ data:
         "username": "admin"
       }
     }
-  kruizeconfigjson: |
+  kruizeconfigjson: >
     {
       "clustertype": "kubernetes",
       "k8stype": "openshift",
@@ -252,6 +289,7 @@ data:
         }
       ]
     }
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -286,10 +324,10 @@ spec:
               value: /var/lib/pg_data
           resources:
             requests:
-              memory: "100Mi"
+              memory: 100Mi
               cpu: "0.5"
             limits:
-              memory: "100Mi"
+              memory: 100Mi
               cpu: "0.5"
           ports:
             - containerPort: 5432
@@ -300,6 +338,7 @@ spec:
         - name: kruize-db-storage
           persistentVolumeClaim:
             claimName: kruize-db-pv-claim
+
 ---
 apiVersion: v1
 kind: Service
@@ -316,6 +355,7 @@ spec:
       targetPort: 5432
   selector:
     app: kruize-db
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -338,7 +378,7 @@ spec:
       serviceAccountName: kruize-sa
       initContainers:
         - name: wait-for-kruize-db
-          image: quay.io/kruizehub/postgres:15.2 # Use the same Postgres version as the Postgres deployment
+          image: quay.io/kruizehub/postgres:15.2
           imagePullPolicy: IfNotPresent
           command:
             - sh
@@ -357,46 +397,38 @@ spec:
               mountPath: /etc/config
           env:
             - name: LOGGING_LEVEL
-              value: "info"
+              value: info
             - name: ROOT_LOGGING_LEVEL
-              value: "error"
+              value: error
             - name: DB_CONFIG_FILE
-              value: "/etc/config/dbconfigjson"
+              value: /etc/config/dbconfigjson
             - name: KRUIZE_CONFIG_FILE
-              value: "/etc/config/kruizeconfigjson"
+              value: /etc/config/kruizeconfigjson
             - name: JAVA_TOOL_OPTIONS
-              value: "-XX:MaxRAMPercentage=80"
+              value: -XX:MaxRAMPercentage=80
             - name: KAFKA_BOOTSTRAP_SERVERS
-              value: "kruize-kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092"
+              value: kruize-kafka-cluster-kafka-bootstrap.kafka.svc.cluster.local:9092
             - name: KAFKA_TOPICS
-              value: "recommendations-topic,error-topic,summary-topic"
+              value: recommendations-topic,error-topic,summary-topic
             - name: KAFKA_RESPONSE_FILTER_INCLUDE
-              value: "experiments|status|apis|recommendations|response|status_history"
+              value: experiments|status|apis|recommendations|response|status_history
             - name: KAFKA_RESPONSE_FILTER_EXCLUDE
               value: ""
           resources:
             requests:
-              memory: "768Mi"
+              memory: 768Mi
               cpu: "0.7"
             limits:
-              memory: "768Mi"
+              memory: 768Mi
               cpu: "0.7"
           ports:
             - name: kruize-port
               containerPort: 8080
-      #          livenessProbe:
-      #            exec:
-      #              command:
-      #                - sh
-      #                - -c
-      #                - chmod +x /home/autotune/app/target/bin/TestDBConnection && /home/autotune/app/target/bin/TestDBConnection
-      #            initialDelaySeconds: 10
-      #            periodSeconds: 5
-      #            timeoutSeconds: 20
       volumes:
         - name: config-volume
           configMap:
             name: kruizeconfig
+
 ---
 apiVersion: v1
 kind: Service
@@ -404,8 +436,8 @@ metadata:
   name: kruize
   namespace: openshift-tuning
   annotations:
-    prometheus.io/scrape: 'true'
-    prometheus.io/path: '/metrics'
+    prometheus.io/scrape: "true"
+    prometheus.io/path: /metrics
   labels:
     app: kruize
 spec:
@@ -416,6 +448,7 @@ spec:
     - name: kruize-port
       port: 8080
       targetPort: 8080
+
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -423,7 +456,7 @@ metadata:
   name: create-partition-cronjob
   namespace: openshift-tuning
 spec:
-  schedule: "0 0 25 * *" # Run on 25th of every month at midnight
+  schedule: 0 0 25 * *
   jobTemplate:
     spec:
       template:
@@ -440,23 +473,25 @@ spec:
                 - -c
                 - |
                   /home/autotune/app/target/bin/CreatePartition
-              args: [ "" ]
+              args:
+                - ""
               env:
                 - name: START_AUTOTUNE
                   value: "false"
                 - name: LOGGING_LEVEL
-                  value: "info"
+                  value: info
                 - name: ROOT_LOGGING_LEVEL
-                  value: "error"
+                  value: error
                 - name: DB_CONFIG_FILE
-                  value: "/etc/config/dbconfigjson"
+                  value: /etc/config/dbconfigjson
                 - name: KRUIZE_CONFIG_FILE
-                  value: "/etc/config/kruizeconfigjson"
+                  value: /etc/config/kruizeconfigjson
           volumes:
             - name: config-volume
               configMap:
                 name: kruizeconfig
           restartPolicy: OnFailure
+
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -464,7 +499,7 @@ metadata:
   name: kruize-delete-partition-cronjob
   namespace: openshift-tuning
 spec:
-  schedule: "0 0 25 * *" # Run on 25th of every month at midnight
+  schedule: 0 0 25 * *
   jobTemplate:
     spec:
       template:
@@ -481,18 +516,19 @@ spec:
                 - -c
                 - |
                   /home/autotune/app/target/bin/RetentionPartition
-              args: [ "" ]
+              args:
+                - ""
               env:
                 - name: START_AUTOTUNE
                   value: "false"
                 - name: LOGGING_LEVEL
-                  value: "info"
+                  value: info
                 - name: ROOT_LOGGING_LEVEL
-                  value: "error"
+                  value: error
                 - name: DB_CONFIG_FILE
-                  value: "/etc/config/dbconfigjson"
+                  value: /etc/config/dbconfigjson
                 - name: KRUIZE_CONFIG_FILE
-                  value: "/etc/config/kruizeconfigjson"
+                  value: /etc/config/kruizeconfigjson
                 - name: deletepartitionsthreshold
                   value: "15"
           volumes:
@@ -500,6 +536,7 @@ spec:
               configMap:
                 name: kruizeconfig
           restartPolicy: OnFailure
+
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -516,6 +553,7 @@ spec:
     - port: kruize-port
       interval: 30s
       path: /metrics
+
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -547,6 +585,7 @@ data:
         }
       }
     }
+
 ---
 apiVersion: v1
 kind: Service
@@ -561,6 +600,7 @@ spec:
       targetPort: 8080
   selector:
     app: kruize-ui-nginx
+
 ---
 apiVersion: v1
 kind: Pod
@@ -576,7 +616,7 @@ spec:
       imagePullPolicy: Always
       env:
         - name: KRUIZE_UI_ENV
-          value: "production"
+          value: production
       volumeMounts:
         - name: nginx-config-volume
           mountPath: /etc/nginx/nginx.conf
